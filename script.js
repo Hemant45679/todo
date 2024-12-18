@@ -1,6 +1,19 @@
 // Array to store to-do items
 let todoItems = [];
 
+// Load todo items from local storage
+function loadTodosFromLocalStorage() {
+  const savedTodos = localStorage.getItem('todoItems');
+  if (savedTodos) {
+    todoItems = JSON.parse(savedTodos);
+  }
+}
+
+// Save todo items to local storage
+function saveTodosToLocalStorage() {
+  localStorage.setItem('todoItems', JSON.stringify(todoItems));
+}
+
 // Function to add new to-do item
 function addTodo(text) {
   const todo = {
@@ -10,6 +23,7 @@ function addTodo(text) {
   };
 
   todoItems.push(todo);
+  saveTodosToLocalStorage(); // Save updated list to local storage
   renderTodoList();
 }
 
@@ -19,6 +33,7 @@ function editTodo(id, newText) {
 
   if (index !== -1) {
     todoItems[index].text = newText;
+    saveTodosToLocalStorage(); // Save updated list to local storage
     renderTodoList();
   }
 }
@@ -26,6 +41,7 @@ function editTodo(id, newText) {
 // Function to delete existing to-do item
 function deleteTodo(id) {
   todoItems = todoItems.filter(item => item.id !== id);
+  saveTodosToLocalStorage(); // Save updated list to local storage
   renderTodoList();
 }
 
@@ -35,6 +51,7 @@ function toggleCompleted(id) {
 
   if (index !== -1) {
     todoItems[index].completed = !todoItems[index].completed;
+    saveTodosToLocalStorage(); // Save updated list to local storage
     renderTodoList();
   }
 }
@@ -94,6 +111,9 @@ form.addEventListener('submit', event => {
     input.value = '';
   }
 });
+
+// Load saved to-dos on page load
+loadTodosFromLocalStorage();
 
 // Initial rendering of to-do list
 renderTodoList();
